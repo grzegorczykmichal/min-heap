@@ -18,7 +18,40 @@ class MinHeap<T> {
   }
 
   siftDown(currentIndex: number, endIndex: number, heap: T[]): T[] {
-    return [];
+    if (currentIndex >= endIndex) {
+      return heap;
+    }
+    const leftChildIndex = currentIndex * 2 + 1;
+    const rightChildIndex = currentIndex * 2 + 2;
+
+    const leftChild =
+      leftChildIndex < this.LastIndex ? heap[leftChildIndex] : null;
+    const rightChild =
+      leftChildIndex < this.LastIndex ? heap[rightChildIndex] : null;
+
+    let childIndex = null;
+
+    if (leftChild === null) {
+      childIndex = rightChildIndex;
+    }
+
+    if (rightChild === null) {
+      childIndex = leftChildIndex;
+    }
+
+    if (leftChild !== null || rightChild !== null) {
+      childIndex = leftChild! < rightChild! ? leftChildIndex : rightChildIndex;
+    }
+
+    if (childIndex) {
+      return this.siftDown(
+        childIndex,
+        endIndex,
+        this.swap(currentIndex, childIndex, heap)
+      );
+    }
+
+    return heap;
   }
 
   siftUp(currentIndex: number, heap: T[]): T[] {
@@ -27,7 +60,10 @@ class MinHeap<T> {
     }
     const parentIndex = Math.floor((currentIndex - 1) / 2);
     if (heap[parentIndex] > heap[currentIndex]) {
-      return this.swap(currentIndex, parentIndex, heap);
+      return this.siftUp(
+        parentIndex,
+        this.swap(currentIndex, parentIndex, heap)
+      );
     }
     return heap;
   }
@@ -57,7 +93,9 @@ class MinHeap<T> {
   }
 }
 
-const minHeap = new MinHeap<number>([3, 2]);
+const minHeap = new MinHeap<number>([1, 100, 20, 50, 45, 19, 18]);
+log(minHeap);
+minHeap.remove();
 log(minHeap);
 minHeap.insert(1);
 log(minHeap);
